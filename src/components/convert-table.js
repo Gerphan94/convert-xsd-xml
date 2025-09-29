@@ -10,10 +10,16 @@ import Prism from "prismjs";
 import { FaArrowRightToBracket, FaAngleRight, FaAngleDown } from "react-icons/fa6";
 import { FaSave, FaRegCopy } from "react-icons/fa";
 function Table({ data }) {
+    console.log('data', data)
 
     const [show, setShow] = useState(false);
-    const [inputData, setInputData] = useState(data.inputdata);
-    const [outputData, setOutputData] = useState(data.outputdata);
+    const [inputData, setInputData] = useState('');
+    const [outputData, setOutputData] = useState('');
+
+    useEffect(() => {
+        setInputData(data.inputdata);
+        setOutputData(data.outputdata);
+    }, [data]);
 
     useEffect(() => {
         Prism.highlightAll();
