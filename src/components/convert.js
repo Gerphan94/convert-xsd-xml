@@ -4,11 +4,11 @@ import { formatXml } from "./format-xml";
 import Prism from "prismjs";
 import "prismjs/themes/prism.css";
 import { writeUser } from "./writedata";
-import { writeParent, getAllParentData } from "./fb-parent";
-import { FaPlus, FaCheck, FaXmark } from "react-icons/fa6";
+import { writeParent, getAllParentData, insertParent } from "./fb-parent";
+import { FaPlus, FaCheck, FaXmark, FaAngleLeft, FaAngleRight } from "react-icons/fa6";
 import { set } from "firebase/database";
 import { getTopic } from "./fb-topic";
-import { getTable } from "./fb-table";
+import { getTable, insertTable } from "./fb-table";
 
 import Table from "./convert-table";
 
@@ -17,6 +17,8 @@ function Convert() {
     const inputRef = useRef(null);
 
     const [newTableName, setNewTableName] = useState('');
+    const [addTable, setAddTable] = useState(false);
+    const [addedTableName, setAddedTableName] = useState('');
 
     const [schemaLocation, setSchemaLocation] = useState('CSYT.base0.xsd');
     const [name, setName] = useState('');
@@ -36,7 +38,23 @@ function Convert() {
     const [tableName, setTableName] = useState('');
     const [sltTableId, setSltTableId] = useState('');
 
+    const filterData = tableList.filter(item => item.parentid === sltParentId);
 
+
+    const TOPICS = [
+        { id: "moi_truong", name: "Bảo vệ môi trường trong Y tế" },
+
+    ]
+
+    const [topicIndex, setTopicIndex] = useState(0);
+    const onClickNext = () => {
+        setTopicIndex((topicIndex + 1) % TOPICS.length);
+        setSltTopic(TOPICS[topicIndex]);
+    }
+    const onClickPrev = () => {
+        setTopicIndex((topicIndex - 1 + TOPICS.length) % TOPICS.length);
+        setSltTopic(TOPICS[topicIndex]);
+    }
 
 
     useEffect(() => {
@@ -67,8 +85,6 @@ function Convert() {
     }, [sltParentId]);
 
 
-   
-
 
     const conpyToClipboard = () => {
         navigator.clipboard.writeText(xsdData);
@@ -80,18 +96,30 @@ function Convert() {
         });
     };
 
+    const onClickAddTable = () => {
+        setAddedTableName('');
+        setAddTable(!addTable);
+        insertTable(newTableName, sltParentId);
+    }
+
 
     return (
 
         <>
-            <di className="flex justify-center gap-2 p-2">
-                <h1 className="text-2xl font-medium ">{sltTopic.name}</h1>
+            <di className="flex justify-center items-center  gap-10 p-2">
+                <button className="text-3xl font-medium " onClick={onClickPrev}><FaAngleLeft /></button>
+                <h1 className="text-3xl font-medium select-none ">{sltTopic.name}</h1>
+                <button className="text-3xl font-medium " onClick={onClickNext}><FaAngleRight /></button>
 
             </di>
             <div className="flex flex-col flex-grow p-10 space-y-4">
                 <div className="flex gap-6 items-center text-sm">
                     <div className="w-1/4 flex gap-2 pr-2">
-                        <select className="w-full border outline-none rounded-md px-2 py-1">
+                        <select
+                            value={sltParentId}
+                            onChange={(e) => setSltParentId(e.target.value)}
+                            className="w-full border outline-none rounded-md px-2 py-1"
+                        >
                             {parentList.map((item, index) => (
                                 <option key={index} value={item.id}>{item.name}</option>
                             ))}
@@ -117,7 +145,7 @@ function Convert() {
                             <button
                                 className="border bg-blue-600 text-white rounded-md p-2"
                                 onClick={() => {
-                                    writeParent(parentName);
+                                    insertParent(parentName, sltTopic.id);
                                     setIsAddParent(false);
                                     setParentName('');
                                 }}
@@ -136,11 +164,28 @@ function Convert() {
                     )}
                 </div>
                 <div className="space-y-2">
-                    {tableList.map((item, index) => (
+                    {filterData.map((item, index) => (
                         <Table data={item} key={index} />
                     ))}
-                    
-                   
+                    <div className="text-left flex gap-2 items-center">
+                        <button className="underline text-blue-300 hover:text-blue-500" onClick={() => setAddTable(true)}>Thêm table</button>
+
+                        {addTable &&
+                            <>
+                                <input
+                                    value={newTableName}
+                                    onChange={(e) => setNewTableName(e.target.value)}
+                                    className="border px-2 py-0.5 outline-none rounded-md w-96"
+                                />
+                                <button 
+                                className="border bg-blue-600 text-white rounded-md p-2 text-xs"
+                                onClick={() => onClickAddTable()}
+                                >
+                                    <FaCheck />
+                                </button>
+                                <button className="border bg-red-600 text-white rounded-md p-2 text-xs" onClick={() => setAddTable(false)}><FaXmark /></button>
+                            </>}
+                    </div>
                 </div>
 
 

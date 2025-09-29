@@ -1,6 +1,6 @@
 
-import { saveTableDataByTableId } from "./fb-update-table";
-import { useState, useEffect, useLayoutEffect } from "react";
+import { saveTableDataByTableId } from "./fb-table";
+import { useState, useEffect } from "react";
 
 
 import { convertTextToXML } from "./f-convert-to-xml";
