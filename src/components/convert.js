@@ -7,6 +7,10 @@ import { writeUser } from "./writedata";
 import { writeParent, getAllParentData } from "./fb-parent";
 import { FaPlus, FaCheck, FaXmark } from "react-icons/fa6";
 import { set } from "firebase/database";
+import { getTopic } from "./fb-topic";
+import { getTable } from "./fb-table";
+
+import Table from "./convert-table";
 
 
 function Convert() {
@@ -18,35 +22,52 @@ function Convert() {
     const [name, setName] = useState('');
     const [inputData, setInputData] = useState('');
     const [xsdData, setXsdData] = useState('');
-    const [parentList, setParentList] = useState({});
+
+    const [topicList, setTopicList] = useState({});
+    const [sltTopic, setSltTopic] = useState({ id: 'moi_truong', name: 'Bảo vệ môi trường trong Y tế' });
+
+    const [parentList, setParentList] = useState([]);
     const [isAddParent, setIsAddParent] = useState(false);
     const [parentName, setParentName] = useState('');
     const [sltParentId, setSltParentId] = useState('');
 
+    const [tableList, setTableList] = useState([]);
+    const [isAddTable, setIsAddTable] = useState(false);
+    const [tableName, setTableName] = useState('');
+    const [sltTableId, setSltTableId] = useState('');
+
+
+
 
     useEffect(() => {
-    const fetchData = async () => {
-      const data = await getAllParentData();  // 👈 wait for data
-      console.log("Fetched:", data);
-      setParentList(data);
-    };
-    fetchData();
-  }, []);
+        const fetchData = async () => {
+            const data = await getTopic();  // 👈 wait for data
+            console.log('data', data)
+            setTopicList(data);
+        };
+        fetchData();
+    }, []);
 
     useEffect(() => {
-        Prism.highlightAll();
-    }, [xsdData]);
+        const fetchData = async () => {
+            const data = await getAllParentData();  // 👈 wait for data
+            console.log('parent', data)
+            setParentList(data);
+        };
+        fetchData();
+    }, [sltTopic.id]);
 
-    const convertToXSD = () => {
-        // if (!name.trim()) {
-        //     inputRef.current.focus(); // focus input if empty
-        // }
-        // if (!inputData) return;
-        // setXsdData((convertTextToXML(inputData, name, schemaLocation)));
-        // // setXsdData(formatXml(convertTextToXML(inputData, name, schemaLocation)));
-        writeUser("user1", "Alice", "alice@example.com");
-    };
+    useEffect(() => {
+        const fetchData = async () => {
+            const data = await getTable();  // 👈 wait for data
+            console.log('parent', data)
+            setTableList(data);
+        };
+        fetchData();
+    }, [sltParentId]);
 
+
+   
 
 
     const conpyToClipboard = () => {
@@ -60,18 +81,19 @@ function Convert() {
     };
 
 
-
     return (
 
         <>
+            <di className="flex justify-center gap-2 p-2">
+                <h1 className="text-2xl font-medium ">{sltTopic.name}</h1>
+
+            </di>
             <div className="flex flex-col flex-grow p-10 space-y-4">
                 <div className="flex gap-6 items-center text-sm">
                     <div className="w-1/4 flex gap-2 pr-2">
                         <select className="w-full border outline-none rounded-md px-2 py-1">
-                            {Object.entries(parentList).map(([key, value]) => (
-                                <option key={key} value={value.id}>
-                                    {value.name}
-                                </option>
+                            {parentList.map((item, index) => (
+                                <option key={index} value={item.id}>{item.name}</option>
                             ))}
                         </select>
                         <button
@@ -106,7 +128,6 @@ function Convert() {
                             <button
                                 className="border bg-red-600 text-white rounded-md p-2"
                                 onClick={() => setIsAddParent(false)}
-
                             >
                                 <FaXmark />
                             </button>
@@ -114,54 +135,12 @@ function Convert() {
                         </div>
                     )}
                 </div>
-                <div className="flex gap-10  h-sceen">
-                    <div className="w-1/4 text-left">
-
-                        <div className="w-full text-left">
-                            <label className="font-medium py-1">Table Name:</label>
-                            <input
-                                value={name}
-                                ref={inputRef}
-                                onChange={(e) => setName(e.target.value)}
-                                placeholder="Nhập tên"
-                                className="border bg-orange-100 border-gray-300 rounded-lg p-2 w-full outline-none uppercase"
-                            />
-                        </div>
-                        <div className="py-2 space-y-2">
-                            <button className="border rounded-md px-2 py-1 text-sm" onClick={pasteFromClipboard}>Paste from Clipboard</button>
-                            <textarea
-                                value={inputData}
-                                spellCheck="false"
-                                autoComplete="off"
-                                onChange={(e) => setInputData(e.target.value)}
-
-                                className="border border-gray-300 text-sm rounded-lg p-2 w-full h-[600px] outline-none"
-                            />
-                        </div>
-                        <div className="w-full flex gap-2 items-center text-left">
-                            <label className="font-medium py-1">schemaLocation:</label>
-
-                            <input
-                                value={schemaLocation}
-                                onChange={(e) => setSchemaLocation(e.target.value)}
-                                className="border border-gray-300 rounded-lg p-2 w-full outline-none"
-                            />
-                            <div className="flex gap-4  px-10">
-                                <button className="w-28 border rounded px-2 py-1 bg-blue-600 hover:bg-blue-700 text-white" onClick={convertToXSD}>Convert</button>
-
-                            </div>
-                        </div>
-
-                    </div>
-                    <div className="w-3/4 text-left h-full">
-                        <div className="flex justify-between">
-                            <label className="font-medium py-1 ">XML</label>
-                            <button className="border">Copy To Clipboard</button>
-                        </div>
-                        <pre className="overflow-auto h-full">
-                            <code className="language-xml">{xsdData}</code>
-                        </pre>
-                    </div>
+                <div className="space-y-2">
+                    {tableList.map((item, index) => (
+                        <Table data={item} key={index} />
+                    ))}
+                    
+                   
                 </div>
 
 
@@ -172,3 +151,8 @@ function Convert() {
 }
 
 export default Convert;
+
+
+{/* <pre className="overflow-auto h-full">
+    <code className="language-xml">{xsdData}</code>
+</pre> */}
