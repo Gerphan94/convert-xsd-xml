@@ -16,7 +16,6 @@ import Table from "./convert-table";
 function Convert() {
     const inputRef = useRef(null);
 
-    const [newTableName, setNewTableName] = useState('');
     const [addTable, setAddTable] = useState(false);
     const [addedTableName, setAddedTableName] = useState('');
 
@@ -99,7 +98,7 @@ function Convert() {
     const onClickAddTable = () => {
         setAddedTableName('');
         setAddTable(!addTable);
-        insertTable(newTableName, sltParentId);
+        insertTable(addedTableName, sltParentId);
     }
 
 
@@ -173,8 +172,8 @@ function Convert() {
                         {addTable &&
                             <>
                                 <input
-                                    value={newTableName}
-                                    onChange={(e) => setNewTableName(e.target.value)}
+                                    value={addedTableName}
+                                    onChange={(e) => setAddedTableName(e.target.value)}
                                     className="border px-2 py-0.5 outline-none rounded-md w-96"
                                 />
                                 <button 
@@ -198,6 +197,3 @@ function Convert() {
 export default Convert;
 
 
-{/* <pre className="overflow-auto h-full">
-    <code className="language-xml">{xsdData}</code>
-</pre> */}

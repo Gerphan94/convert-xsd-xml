@@ -7,8 +7,8 @@ import { convertTextToXML } from "./f-convert-to-xml";
 import { formatXml } from "./format-xml";
 import Prism from "prismjs";
 
-import { FaArrowRightToBracket, FaAngleRight, FaAngleDown  } from "react-icons/fa6";
-import { FaSave } from "react-icons/fa";
+import { FaArrowRightToBracket, FaAngleRight, FaAngleDown } from "react-icons/fa6";
+import { FaSave, FaRegCopy } from "react-icons/fa";
 function Table({ data }) {
 
     const [show, setShow] = useState(false);
@@ -19,7 +19,7 @@ function Table({ data }) {
         Prism.highlightAll();
     }, [outputData, show]);
 
-    const hanldeSave = () => {
+    const onSave = () => {
         if (!inputData || !outputData) return;
         saveTableDataByTableId(data.name, inputData, outputData);
     }
@@ -27,6 +27,10 @@ function Table({ data }) {
 
     const handleConvert = (input, name) => {
         setOutputData(convertTextToXML(input, name));
+    }
+
+    const onCopy = () => {
+        navigator.clipboard.writeText(outputData);
     }
 
     return (
@@ -38,7 +42,7 @@ function Table({ data }) {
                             {show ? <FaAngleDown /> : <FaAngleRight />}
 
                         </button>
-                        <div>{data.name}</div> 
+                        <div>{data.name}</div>
                         <div className="italic"> {data.des}</div>
                     </div>
 
@@ -75,12 +79,20 @@ function Table({ data }) {
                                 <div className="text-xl text-blue-500">
                                     XML
                                 </div>
-                                <button className="p-2 bg-[#50589C] text-white px-3 rounded-lg"
-                                    onClick={hanldeSave}
-                                >
+                                <div className="flex gap-2 items-center">
+                                    <button className="p-2 bg-[#50589C] text-white px-2 rounded-lg"
+                                        onClick={onSave}
+                                    >
+                                        <FaSave />
+                                    </button>
+                                    <button className="p-2 bg-[#50589C] text-white px-2 rounded-lg"
+                                        onClick={onCopy}
+                                    >
+                                        <FaRegCopy />
+                                    </button>
 
-                                    <FaSave />
-                                </button>
+                                </div>
+
                             </div>
                             <div>
                                 <pre className="overflow-auto h-[500px] overflow-y-auto">
