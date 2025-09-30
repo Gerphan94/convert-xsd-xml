@@ -24,15 +24,16 @@ export const convertTextToXML = (input, name, schemaLocation) => {
             } else if (typeRaw.includes("DIA_CHI")) {
                 xsdElements.push(`<${field}>${DIA_CHI}</${field}>`);
             } else {
+                const fieldType = typeRaw.replace("(S)", "").trim();
                 if (number.trim().toLowerCase() === "1..n") {
                     xsdElements.push(`<${field}>`);
                     for (let i = 1; i <= 3; i++) {
-                        xsdElements.push(`  <${field}></${field}>`);
+                        xsdElements.push(`  <${fieldType}></${fieldType}>`);
                     }
-                    xsdElements.push(`</${field}>`);
+                    xsdElements.push(`</${fieldType}>`);
                 }
                 else {
-                    xsdElements.push(`<${field}></${field}>`);
+                    xsdElements.push(`<${fieldType}></${fieldType}>`);
                 }
             }
         }

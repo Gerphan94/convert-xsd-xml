@@ -9,8 +9,14 @@ import Prism from "prismjs";
 
 import { FaArrowRightToBracket, FaAngleRight, FaAngleDown } from "react-icons/fa6";
 import { FaSave, FaRegCopy } from "react-icons/fa";
+import ConvertConfirmModal from "./convert-confirm-modal";
+
+
 function Table({ data }) {
     console.log('data', data)
+
+    const [showConfirm, setShowConfirm] = useState(false);
+
 
     const [show, setShow] = useState(false);
     const [inputData, setInputData] = useState('');
@@ -31,7 +37,9 @@ function Table({ data }) {
     }
 
 
-    const handleConvert = (input, name) => {
+    const onConvert = (input, name) => {
+        if (input === "") return;
+        setShowConfirm(true); 
         setOutputData(convertTextToXML(input, name));
     }
 
@@ -61,7 +69,7 @@ function Table({ data }) {
                                     COLUMN
                                 </div>
                                 <button className="p-2 bg-[#50589C] text-white px-3 rounded-lg"
-                                    onClick={() => handleConvert(inputData, data.name)}
+                                    onClick={() => onConvert(inputData, data.name)}
                                 >
 
                                     <FaArrowRightToBracket />
@@ -111,6 +119,8 @@ function Table({ data }) {
                     </div>
                 }
             </div>
+
+            {showConfirm && <ConvertConfirmModal tablename={data.name} input={inputData} setShow={setShowConfirm} />}
 
 
 

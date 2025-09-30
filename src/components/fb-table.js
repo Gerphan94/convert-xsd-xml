@@ -3,14 +3,14 @@ import { db } from "../config/firebase";
 
 
 export const toSnakeCase = (str) => {
-    return str
-        .normalize("NFD")                   // split accents from letters
-        .replace(/[\u0300-\u036f]/g, "")    // remove accents
-        .toLowerCase()                      // convert to lowercase
-        .replace(/đ/g, "d")                 // replace special Vietnamese char
-        .replace(/[^a-z0-9\s]/g, "")        // remove non-alphanumeric
-        .trim()                             // remove spaces at ends
-        .replace(/\s+/g, "_");              // replace spaces with underscores
+  return str
+    .normalize("NFD")                   // split accents from letters
+    .replace(/[\u0300-\u036f]/g, "")    // remove accents
+    .toLowerCase()                      // convert to lowercase
+    .replace(/đ/g, "d")                 // replace special Vietnamese char
+    .replace(/[^a-z0-9\s]/g, "")        // remove non-alphanumeric
+    .trim()                             // remove spaces at ends
+    .replace(/\s+/g, "_");              // replace spaces with underscores
 };
 
 export async function getTable() {
@@ -89,3 +89,84 @@ export async function saveTableDataByTableId(tableName, inputData, outputData) {
 }
 
 
+
+export async function isExistTable(tbname) {
+  try {
+    const dbRef = ref(db);
+    const snapshot = await get(child(dbRef, "table"));
+    if (snapshot.exists()) {
+      const tableArray = snapshot.val();
+      // find index where item.id === tableId
+      const index = tableArray.findIndex((item) => item.name === tbname && item.outputData !== "");
+
+      if (index === -1) {
+        console.log("❌ Table with id not found:", tbname);
+        return false
+      }
+      console.log("✅ Table with id found:", tbname);
+      return true
+    }
+  } catch (error) {
+    console.error(error);
+  }
+}
+
+export const THOIGIAN = `
+    <GT_THOIGIAN>GT_THOIGIAN1</GT_THOIGIAN>
+    <DINHDANG_THOIGIAN>DINHDANG_THOIGIAN1</DINHDANG_THOIGIAN>
+`
+
+export const DIA_CHI = `
+    <MA_DINHDANH_HC>MA_DINHDANH_HC1</MA_DINHDANH_HC>
+    <MA_TINH>MA_TINH1</MA_TINH>
+    <MA_XA>MA_XA1</MA_XA>
+    <CHITIET>CHITIET1</CHITIET>
+    <QUOCGIA>QUOCGIA1</QUOCGIA>
+`
+
+
+export const convertTextToXML = (input, name) => {
+  const lines = input.trim().split("\n");
+
+  let xmlElements = [];
+  for (let line of lines) {
+    let [field, number, typeRaw] = line.trim().split(/\s{3,}|\t/); // tách bằng tab hoặc nhiều space
+    if (!field || !typeRaw) continue;
+    if (typeRaw.includes("(T)")) {
+      if (number.trim().toLowerCase() === "1..n") {
+        xmlElements.push(`<${field}>`);
+        for (let i = 1; i <= 3; i++) {
+          xmlElements.push(`  <${field}>${field}${i}</${field}>`);
+        }
+        xmlElements.push(`</${field}>`);
+      } else {
+        xmlElements.push(`<${field}>${field}1</${field}>`);
+      }
+
+    } else if (typeRaw.includes("(S)")) {
+      if (typeRaw.includes("THOIGIAN")) {
+        xmlElements.push(`<${field}>${THOIGIAN}</${field}>`);
+      } else if (typeRaw.includes("DIA_CHI")) {
+        xmlElements.push(`<${field}>${DIA_CHI}</${field}>`);
+      } else {
+        const fieldType = typeRaw.replace("(S)", "").trim();
+        if (number.trim().toLowerCase() === "1..n") {
+          xmlElements.push(`<${field}>`);
+          for (let i = 1; i <= 3; i++) {
+            xmlElements.push(`  <${fieldType}></${fieldType}>`);
+          }
+          xmlElements.push(`</${fieldType}>`);
+        }
+        else {
+          xmlElements.push(`<${fieldType}></${fieldType}>`);
+        }
+      }
+    }
+  }
+
+  // Gói thành schema
+  const schema = `<${name.toUpperCase()}>
+    ${xmlElements.join("\n")}
+</${name.toUpperCase()}>`;
+  return schema;
+}
