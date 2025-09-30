@@ -37,32 +37,36 @@ function ConvertConfirmModal({ tablename = '', input, setShow }) {
     return (
         <>
             <div>
-                <div className="fixed inset-0 z-50 outline-none focus:outline-none">
-                    <div className="relative lg:w-1/3 md:w-1/3 top-1/4 w-full my-6 mx-auto max-w-3xl bg-white">
-                        {/* HEADER */}
-                        <div className="text-left text-lg font-bold border-b-black w-full px-4 py-3 bg-[#9BB0C1]">
-                            {tablename}
-                        </div>
+                <div className="fixed inset-0 z-50 outline-none focus:outline-none overflow-hidden">
+                    <div className="w-screen p-10">
 
-                        {/* BODY */}
-                        <div className="min-h-40 text-left p-10">
-                            {structs.map((struct, index) => (
-                                <div key={index} className="flex gap-4 items-center">
-                                    <div className="font-medium">{struct.table}</div>
-                                    <div>{struct.exist === true ? <FaCheck className="text-green-500" /> : <FaXmark className="text-red-500" />} </div>
-                                    
-                                </div>
-                            ))}
-                        </div>
-                        {/* FOOTER  */}
-                        <div className="w-full flex gap-4 items-center justify-end px-4 py-3 bg-[#f5f5f5] relative">
-                            <button
-                                className='select-none border rounded-md px-2 py-1 text-red-500 border-red-500 hover:bg-red-500 hover:text-white'
-                                type="button"
-                                onClick={() => setShow(false)}
-                            >
-                                Đóng
-                            </button>
+
+                        <div className="relative top-1/4 w-full h-full my-6   bg-white">
+                            {/* HEADER */}
+                            <div className="text-left text-lg font-bold border-b-black w-full px-4 py-3 bg-[#9BB0C1]">
+                                {tablename}
+                            </div>
+
+                            {/* BODY */}
+                            <div className="text-left p-10">
+                                {structs.map((struct, index) => (
+                                    <div key={index} className="flex gap-4 items-center">
+                                        <div className="font-medium">{struct.table}</div>
+                                        <div>{struct.exist === true ? <FaCheck className="text-green-500" /> : <FaXmark className="text-red-500" />} </div>
+
+                                    </div>
+                                ))}
+                            </div>
+                            {/* FOOTER  */}
+                            <div className="w-full flex gap-4 items-center justify-end px-4 py-3 bg-[#f5f5f5] relative">
+                                <button
+                                    className='select-none border rounded-md px-2 py-1 text-red-500 border-red-500 hover:bg-red-500 hover:text-white'
+                                    type="button"
+                                    onClick={() => setShow(false)}
+                                >
+                                    Đóng
+                                </button>
+                            </div>
                         </div>
                     </div>
                 </div>

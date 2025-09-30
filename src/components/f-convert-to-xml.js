@@ -1,4 +1,15 @@
-import { THOIGIAN, DIA_CHI } from "../data/element-data";
+export const THOIGIAN = `
+    <GT_THOIGIAN>GT_THOIGIAN1</GT_THOIGIAN>
+    <DINHDANG_THOIGIAN>DINHDANG_THOIGIAN1</DINHDANG_THOIGIAN>
+`
+
+export const DIA_CHI = `
+    <MA_DINHDANH_HC>MA_DINHDANH_HC1</MA_DINHDANH_HC>
+    <MA_TINH>MA_TINH1</MA_TINH>
+    <MA_XA>MA_XA1</MA_XA>
+    <CHITIET>CHITIET1</CHITIET>
+    <QUOCGIA>QUOCGIA1</QUOCGIA>
+`
 
 export const convertTextToXML = (input, name, schemaLocation) => {
     const lines = input.trim().split("\n");
