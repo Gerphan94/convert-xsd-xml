@@ -104,14 +104,14 @@ function Convert() {
 
     return (
 
-        <>
+        <div className="flex flex-col h-screen">
             <di className="flex justify-center items-center  gap-10 p-2">
                 <button className="text-3xl font-medium " onClick={onClickPrev}><FaAngleLeft /></button>
                 <h1 className="text-3xl font-medium select-none ">{sltTopic.name}</h1>
                 <button className="text-3xl font-medium " onClick={onClickNext}><FaAngleRight /></button>
 
             </di>
-            <div className="flex flex-col flex-grow p-10 space-y-4">
+            <div className=" space-y-4 overflow-y-auto">
                 <div className="flex gap-6 items-center text-sm">
                     <div className="w-1/4 flex gap-2 pr-2">
                         <select
@@ -189,7 +189,7 @@ function Convert() {
 
 
             </div>
-        </>
+        </div>
     )
 
 }

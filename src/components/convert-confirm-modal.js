@@ -38,25 +38,31 @@ function ConvertConfirmModal({ tablename = '', input, setShow }) {
         <>
             <div>
                 <div className="fixed inset-0 z-50 outline-none focus:outline-none overflow-hidden">
-                    <div className="w-screen p-10">
-
-
-                        <div className="relative top-1/4 w-full h-full my-6   bg-white">
+                    <div className="w-screen h-screen p-10 ">
+                        <div className="relative  w-full h-full   bg-white flex flex-col flex-grow">
                             {/* HEADER */}
                             <div className="text-left text-lg font-bold border-b-black w-full px-4 py-3 bg-[#9BB0C1]">
                                 {tablename}
                             </div>
 
                             {/* BODY */}
-                            <div className="text-left p-10">
-                                {structs.map((struct, index) => (
-                                    <div key={index} className="flex gap-4 items-center">
-                                        <div className="font-medium">{struct.table}</div>
-                                        <div>{struct.exist === true ? <FaCheck className="text-green-500" /> : <FaXmark className="text-red-500" />} </div>
+                            <div className="flex gap-4 h-full p-4">
+                                <div className="text-left p-10  border rounded-lg shadow-md">
+                                    {structs.map((struct, index) => (
+                                        <div key={index} className="flex gap-4 items-center">
+                                            <div className="font-medium">{struct.table}</div>
+                                            <div>{struct.exist === true ? <FaCheck className="text-green-500" /> : <FaXmark className="text-red-500" />} </div>
 
-                                    </div>
-                                ))}
+                                        </div>
+                                    ))}
+                                </div>
+
+                                <div>
+                                    
+
+                                </div>
                             </div>
+
                             {/* FOOTER  */}
                             <div className="w-full flex gap-4 items-center justify-end px-4 py-3 bg-[#f5f5f5] relative">
                                 <button
