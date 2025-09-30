@@ -63,7 +63,7 @@ function Convert() {
             setTopicList(data);
         };
         fetchData();
-    }, []);
+    }, [sltTopic.id]);
 
     useEffect(() => {
         const fetchData = async () => {

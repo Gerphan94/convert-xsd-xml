@@ -50,8 +50,7 @@ function ConvertConfirmModal({ tablename = '', input, setShow }) {
                                 <div key={index} className="flex gap-4 items-center">
                                     <div className="font-medium">{struct.table}</div>
                                     <div>{struct.exist === true ? <FaCheck className="text-green-500" /> : <FaXmark className="text-red-500" />} </div>
-                                    <div>ss{struct.exist}</div>
-                                    {console.log('struct',struct.table,  struct.exist, typeof struct.exist)}
+                                    
                                 </div>
                             ))}
                         </div>
