@@ -11,6 +11,7 @@ import { getTopic } from "./fb-topic";
 import { getTable, insertTable } from "./fb-table";
 import Table from "./convert-table";
 import Toast from "./toast";
+import { toSnakeCase } from "./func";
 
 function Convert() {
     const inputRef = useRef(null);
@@ -20,7 +21,7 @@ function Convert() {
     const [addedTableName, setAddedTableName] = useState('');
 
     const [showToast, setShowToast] = useState(false);
-    const [message, setMessage] = useState({success: false, message: ''});
+    const [message, setMessage] = useState({ success: false, message: '' });
 
     const [schemaLocation, setSchemaLocation] = useState('CSYT.base0.xsd');
     const [name, setName] = useState('');
@@ -75,7 +76,7 @@ function Convert() {
             setTableList(data);
         };
         fetchData();
-    }, [sltParentId]);
+    }, [sltParentId, sltTopic.id]);
 
 
 
@@ -90,21 +91,37 @@ function Convert() {
     };
 
     const onSubmitAddParent = () => {
-
         setIsAddParent(!isAddParent);
         insertParent(parentName, sltTopic.id);
+        setIsAddParent(false);
+        setParentName('');
+        setShowToast(true);
+        setMessage({ success: true, message: 'Thêm thành công' });
+        setParentList([...parentList, { id: toSnakeCase(parentName), name: parentName, topicid: sltTopic.id }]);
+        setSltParentId(toSnakeCase(parentName));
     };
+
+
+
+
+
     const onClickAddTable = async () => {
         const result = await insertTable(addedTableName, sltParentId);
         if (result.success) {
             setAddedTableName('');
             setAddTable(!addTable);
+            // setTableList([...tableList, {
+            //      name: toSnakeCase(addedTableName), 
+            //      des: addedTableName, 
+            //      inputData: '', 
+            //      outputData: '', 
+            //      parentid: sltParentId }]);
 
         } else {
-          
+
         }
         setShowToast(true);
-        setMessage({success: result.success, message: result.message});
+        setMessage({ success: result.success, message: result.message });
     }
 
 
@@ -162,11 +179,7 @@ function Convert() {
                                 <button
                                     className="border bg-blue-600 text-white rounded-md p-2"
                                     onClick={() => {
-                                        insertParent(parentName, sltTopic.id);
-                                        setIsAddParent(false);
-                                        setParentName('');
-                                        setShowToast(true);
-                                        setMessage('Thêm thành công');
+                                        onSubmitAddParent();
                                     }}
                                 >
                                     <FaCheck />
