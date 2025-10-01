@@ -65,6 +65,12 @@ function Convert() {
             const data = await getParentDataByTopic(sltTopic.id);  // 👈 wait for data
             console.log('parent', data)
             setParentList(data);
+            if (data.length > 0) {
+                setSltParentId(data[0].id);
+            }
+            else {
+                setSltParentId('');
+            }
         };
         fetchData();
     }, [sltTopic.id]);
@@ -173,6 +179,7 @@ function Convert() {
                                     autoComplete="off"
                                     className="border px-2 py-1 outline-none rounded-md w-96"
                                     type="text"
+                                    placeholder="Nhập tên mô hình cha"
                                     value={parentName}
                                     onChange={(e) => setParentName(e.target.value)}
                                 />
@@ -206,6 +213,7 @@ function Convert() {
                                 <>
                                     <input
                                         value={addedTableName}
+                                        placeholder="Nhập tên table (có dấu)"
                                         onChange={(e) => setAddedTableName(e.target.value)}
                                         className="border px-2 py-0.5 outline-none rounded-md w-96"
                                     />
