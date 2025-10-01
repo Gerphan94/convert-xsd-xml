@@ -2,11 +2,11 @@ import { useEffect, useState } from "react";
 import { toSnakeCase } from "./func";
 
 import { updateTableName } from "./firebase/fb-table";
-function EditTableModal({ tablename, tbdes,  setShow,  handleGetTable
+function EditTableModal({ tbname, tbdes,  setShow,  handleGetTable
  }) {
 
     const [input, setInput] = useState(tbdes);
-    const [clearinput, setClearInput] = useState(tablename);
+    const [clearinput, setClearInput] = useState(tbname);
 
     useEffect(() => {
         setClearInput(toSnakeCase(input));
@@ -15,7 +15,7 @@ function EditTableModal({ tablename, tbdes,  setShow,  handleGetTable
     const onUpdate = () => {
         setShow(false);
         handleGetTable();
-        updateTableName(tablename,clearinput, input);
+        updateTableName(tbname,clearinput, input);
         
     }
     return (
