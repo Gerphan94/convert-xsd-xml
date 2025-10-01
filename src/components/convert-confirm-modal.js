@@ -1,8 +1,7 @@
 import React, { useEffect } from "react";
-import { getOutputTable } from "./fb-table";
-import { FaPlus, FaCheck, FaXmark } from "react-icons/fa6";
+import {  FaCheck, FaXmark } from "react-icons/fa6";
 import Prism from "prismjs";
-import { saveTableDataByTableId } from "./fb-table";
+import { saveTableDataByTableId, getOutputTable } from "./firebase/fb-table";
 
 export const THOIGIAN = `
     <GT_THOIGIAN>GT_THOIGIAN1</GT_THOIGIAN>
@@ -16,6 +15,8 @@ export const DIA_CHI = `
     <CHITIET>CHITIET1</CHITIET>
     <QUOCGIA>QUOCGIA1</QUOCGIA>
 `
+
+
 
 function ConvertConfirmModal({ tablename = '', input, setOutputData, setShow }) {
     const [structs, setStructs] = React.useState([]);
@@ -114,7 +115,7 @@ function ConvertConfirmModal({ tablename = '', input, setOutputData, setShow }) 
                     <div className="w-screen  py-10">
                         <div className="relative mx-auto h-full md:w-2/3 bg-white flex flex-col flex-grow rounded-xl">
                             {/* HEADER */}
-                            <div className="text-left text-lg font-bold border-b-black w-full px-4 py-3 bg-[#9BB0C1] rounded-t-xl">
+                            <div className="text-left text-lg font-bold border-b-black w-full px-4 py-3 bg-[#50589C] text-white rounded-t-lg">
                                 {tablename}
                             </div>
 

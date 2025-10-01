@@ -1,5 +1,5 @@
 import { ref, set } from "firebase/database";
-import { db } from "../config/firebase";
+import { db } from "../../config/firebase";
 
 export const writeData = (parentname, name, data) => {
     if (!parentname.trim()) return;

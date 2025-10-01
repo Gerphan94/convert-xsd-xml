@@ -1,22 +1,20 @@
 
-import { saveTableDataByTableId } from "./fb-table";
+import { saveTableDataByTableId } from "./firebase/fb-table";
 import { useState, useEffect } from "react";
 
-
-import { convertTextToXML } from "./f-convert-to-xml";
-import { formatXml } from "./format-xml";
 import Prism from "prismjs";
 
-import { FaArrowRightToBracket, FaAngleRight, FaAngleDown } from "react-icons/fa6";
+import { FaArrowRightToBracket, FaAngleRight, FaAngleDown, FaRegPaste } from "react-icons/fa6";
 import { FaSave, FaRegCopy } from "react-icons/fa";
 import ConvertConfirmModal from "./convert-confirm-modal";
+import EditTableModal from "./edit-table-modal";
+import { RiEdit2Fill } from "react-icons/ri";
 
+function Table({ data, handleGetTable }) {
 
-function Table({ data }) {
-    console.log('data', data)
 
     const [showConfirm, setShowConfirm] = useState(false);
-
+    const [showEditTableModal, setShowEditTableModal] = useState(false);
 
     const [show, setShow] = useState(false);
     const [inputData, setInputData] = useState('');
@@ -39,7 +37,7 @@ function Table({ data }) {
 
     const onConvert = (input, name) => {
         if (input === "") return;
-        setShowConfirm(true); 
+        setShowConfirm(true);
         // setOutputData(convertTextToXML(input, name));
     }
 
@@ -59,6 +57,15 @@ function Table({ data }) {
                         <div>{data.name}</div>
                         <div className="italic"> {data.des}</div>
                     </div>
+                    <div>
+                        <button
+                            className="text-xl"
+                            onClick={() => setShowEditTableModal(true)}
+                        >
+                            <RiEdit2Fill />
+                        </button>
+
+                    </div>
 
                 </div>
                 {show &&
@@ -68,14 +75,25 @@ function Table({ data }) {
                                 <div className="text-xl text-blue-500">
                                     COLUMN
                                 </div>
-                                <button className="p-2 bg-[#50589C] text-white px-3 rounded-lg"
-                                    onClick={() => onConvert(inputData, data.name)}
-                                >
+                                <div className="flex gap-2 items-center">
+                                    <button className="text-[#50589C] px-3 py-1 rounded-lg flex gap-2 items-center border rounded"
+                                        onClick={() => onConvert(inputData, data.name)}
+                                    >
+                                        <FaRegPaste />
+                                        <div>Paste from clipboard</div>
+                                    </button>
 
-                                    <FaArrowRightToBracket />
-                                </button>
+                                    <button className="bg-[#50589C] text-white px-3 py-1 rounded-lg flex gap-2 items-center"
+                                        onClick={() => onConvert(inputData, data.name)}
+                                    >
+                                        <FaArrowRightToBracket />
+                                        <div>Convert</div>
+                                    </button>
+
+                                </div>
+
                             </div>
-                            <div>
+                            <div className="mt-2">
                                 <textarea
                                     autoComplete="off"
                                     spellCheck="false"
@@ -94,15 +112,12 @@ function Table({ data }) {
                                     XML
                                 </div>
                                 <div className="flex gap-2 items-center">
-                                    <button className="p-2 bg-[#50589C] text-white px-2 rounded-lg"
-                                        onClick={onSave}
+
+                                    <button className="text-[#50589C] px-3 py-1  flex gap-2 items-center border rounded"
+                                        onClick={() => onCopy()}
                                     >
-                                        <FaSave />
-                                    </button>
-                                    <button className="p-2 bg-[#50589C] text-white px-2 rounded-lg"
-                                        onClick={onCopy}
-                                    >
-                                        <FaRegCopy />
+                                        <FaRegPaste />
+                                        <div>Copy to clipboard</div>
                                     </button>
 
                                 </div>
@@ -120,13 +135,22 @@ function Table({ data }) {
                 }
             </div>
 
-            {showConfirm && 
-            <ConvertConfirmModal 
-            tablename={data.name} 
-            input={inputData} 
-            setOutputData={setOutputData}
-            setShow={setShowConfirm}
-             />}
+            {showConfirm &&
+                <ConvertConfirmModal
+                    tablename={data.name}
+                    input={inputData}
+                    setOutputData={setOutputData}
+                    setShow={setShowConfirm}
+                />}
+
+            {showEditTableModal &&
+                <EditTableModal
+                    tbname={data.name}
+                    tbdes={data.des}
+                    handleGetTable={handleGetTable}
+                    setShow={setShowEditTableModal}
+                />
+            }
 
 
 

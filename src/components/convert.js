@@ -1,20 +1,19 @@
 import React, { useState, useRef, useEffect } from "react";
-import { convertTextToXML } from "./f-convert-to-xml";
-import { formatXml } from "./format-xml";
-import Prism from "prismjs";
+
 import "prismjs/themes/prism.css";
-import { writeUser } from "./writedata";
-import { writeParent, getParentDataByTopic, insertParent } from "./fb-parent";
-import { FaPlus, FaCheck, FaXmark, FaAngleLeft, FaAngleRight } from "react-icons/fa6";
-import { set } from "firebase/database";
-import { getTopic } from "./fb-topic";
-import { getTable, insertTable } from "./fb-table";
+import { getParentDataByTopic, insertParent } from "./firebase/fb-parent";
+import { getTopic } from "./firebase/fb-topic";
+import { getTable, insertTable } from "./firebase/fb-table";
 import Table from "./convert-table";
 import Toast from "./toast";
 import { toSnakeCase } from "./func";
 
+import { FaPlus, FaCheck, FaXmark } from "react-icons/fa6";
+
+
 function Convert() {
-    const inputRef = useRef(null);
+
+    console.log('--rending convert--');
 
 
     const [addTable, setAddTable] = useState(false);
@@ -23,7 +22,7 @@ function Convert() {
     const [showToast, setShowToast] = useState(false);
     const [message, setMessage] = useState({ success: false, message: '' });
 
-    const [schemaLocation, setSchemaLocation] = useState('CSYT.base0.xsd');
+    // const [schemaLocation, setSchemaLocation] = useState('CSYT.base0.xsd');
     const [name, setName] = useState('');
     const [inputData, setInputData] = useState('');
     const [xsdData, setXsdData] = useState('');
@@ -75,20 +74,17 @@ function Convert() {
         fetchData();
     }, [sltTopic.id]);
 
-    useEffect(() => {
+    const handleGetTable = async () => {
         const fetchData = async () => {
             const data = await getTable();  // 👈 wait for data
-            console.log('parent', data)
             setTableList(data);
         };
         fetchData();
+    }
+
+    useEffect(() => {
+        handleGetTable();
     }, [sltParentId, sltTopic.id]);
-
-
-
-    const conpyToClipboard = () => {
-        navigator.clipboard.writeText(xsdData);
-    };
 
     const pasteFromClipboard = () => {
         navigator.clipboard.readText().then((text) => {
@@ -116,6 +112,7 @@ function Convert() {
         if (result.success) {
             setAddedTableName('');
             setAddTable(!addTable);
+            handleGetTable();
             // setTableList([...tableList, {
             //      name: toSnakeCase(addedTableName), 
             //      des: addedTableName, 
@@ -204,7 +201,7 @@ function Convert() {
                     </div>
                     <div className="space-y-2">
                         {filterData.map((item, index) => (
-                            <Table data={item} key={index} />
+                            <Table data={item} key={index} handleGetTable={handleGetTable} />
                         ))}
                         <div className="text-left flex gap-2 items-center pb-20">
                             <button className="underline text-blue-300 hover:text-blue-500" onClick={() => setAddTable(true)}>Thêm table</button>

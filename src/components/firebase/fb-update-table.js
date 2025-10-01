@@ -1,5 +1,5 @@
 import { ref, get, child, update } from "firebase/database";
-import { db } from "../config/firebase";
+import { db } from "../../config/firebase";
 
 /**
  * Save input/output data by matching table.id

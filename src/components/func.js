@@ -6,5 +6,6 @@ export const toSnakeCase = (str) => {
         .replace(/đ/g, "d")                 // replace special Vietnamese char
         .replace(/[^a-z0-9\s]/g, "")        // remove non-alphanumeric
         .trim()                             // remove spaces at ends
-        .replace(/\s+/g, "_");              // replace spaces with underscores
+        .replace(/\s+/g, "_")
+        .toUpperCase();              // replace spaces with underscores
 };

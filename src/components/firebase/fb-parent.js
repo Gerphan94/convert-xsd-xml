@@ -1,5 +1,5 @@
 import { ref, set, get, child } from "firebase/database";
-import { db } from "../config/firebase";
+import { db } from "../../config/firebase";
 // utils/convert.js
 export const toSnakeCase = (str) => {
     return str

@@ -1,5 +1,5 @@
 import { ref, set, get, child } from "firebase/database";
-import { db } from "../config/firebase";
+import { db } from "../../config/firebase";
 
 export async function getTopic() {
   const dbRef = ref(db);
