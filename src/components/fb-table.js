@@ -90,7 +90,9 @@ export async function saveTableDataByTableId(tableName, inputData, outputData) {
 
 
 
-export async function isExistTable(tbname) {
+export async function getOutputTable(tbname) {
+
+
   try {
     const dbRef = ref(db);
     const snapshot = await get(child(dbRef, "table"));
@@ -100,11 +102,11 @@ export async function isExistTable(tbname) {
       const index = tableArray.findIndex((item) => item.name === tbname && item.outputData !== "");
 
       if (index === -1) {
-        console.log("❌ Table with id not found:", tbname);
-        return false
+        
+        return null
       }
       console.log("✅ Table with id found:", tbname);
-      return true
+      return tableArray[index].outputdata;
     }
   } catch (error) {
     console.error(error);

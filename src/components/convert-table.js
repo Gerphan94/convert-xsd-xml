@@ -40,7 +40,7 @@ function Table({ data }) {
     const onConvert = (input, name) => {
         if (input === "") return;
         setShowConfirm(true); 
-        setOutputData(convertTextToXML(input, name));
+        // setOutputData(convertTextToXML(input, name));
     }
 
     const onCopy = () => {
@@ -120,7 +120,13 @@ function Table({ data }) {
                 }
             </div>
 
-            {showConfirm && <ConvertConfirmModal tablename={data.name} input={inputData} setShow={setShowConfirm} />}
+            {showConfirm && 
+            <ConvertConfirmModal 
+            tablename={data.name} 
+            input={inputData} 
+            setOutputData={setOutputData}
+            setShow={setShowConfirm}
+             />}
 
 
 

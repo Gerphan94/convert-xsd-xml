@@ -33,9 +33,7 @@ function Convert() {
     const [sltParentId, setSltParentId] = useState('');
 
     const [tableList, setTableList] = useState([]);
-    const [isAddTable, setIsAddTable] = useState(false);
-    const [tableName, setTableName] = useState('');
-    const [sltTableId, setSltTableId] = useState('');
+ 
 
     const filterData = tableList.filter(item => item.parentid === sltParentId);
 
@@ -109,9 +107,8 @@ function Convert() {
                 <button className="text-3xl font-medium " onClick={onClickPrev}><FaAngleLeft /></button>
                 <h1 className="text-3xl font-medium select-none ">{sltTopic.name}</h1>
                 <button className="text-3xl font-medium " onClick={onClickNext}><FaAngleRight /></button>
-
             </di>
-            <div className=" space-y-4 overflow-y-auto">
+            <div className=" space-y-4 overflow-y-auto md:px-20 ">
                 <div className="flex gap-6 items-center text-sm">
                     <div className="w-1/4 flex gap-2 pr-2">
                         <select
@@ -166,7 +163,7 @@ function Convert() {
                     {filterData.map((item, index) => (
                         <Table data={item} key={index} />
                     ))}
-                    <div className="text-left flex gap-2 items-center">
+                    <div className="text-left flex gap-2 items-center pb-20">
                         <button className="underline text-blue-300 hover:text-blue-500" onClick={() => setAddTable(true)}>Thêm table</button>
 
                         {addTable &&
