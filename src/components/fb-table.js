@@ -36,12 +36,24 @@ export async function insertTable(name, parentid) {
 
     let tableArray = [];
     if (snapshot.exists()) {
-      tableArray = snapshot.val(); // current array
+      tableArray = snapshot.val();
+    }
+
+    const newId = toSnakeCase(name).toUpperCase();
+
+    // ✅ Check if table already exists (compare by name or id)
+    const exists = tableArray.some((item) => item.name === newId);
+
+    if (exists) {
+      return {
+        success: false,
+        message: `⚠️ Table "${newId}" already exists`,
+      };
     }
 
     // Push new item
     tableArray.push({
-      name: toSnakeCase(name).toUpperCase(),
+      name: newId,
       des: name,
       parentid: parentid,
       inputdata: "",
@@ -51,9 +63,16 @@ export async function insertTable(name, parentid) {
     // Write back to DB
     await set(ref(db, "table"), tableArray);
 
-    console.log("✅ Inserted new table item:");
+    return {
+      success: true,
+      message: `✅ Table "${newId}" inserted successfully`,
+    };
   } catch (error) {
     console.error("❌ Error inserting table item:", error);
+    return {
+      success: false,
+      message: "❌ Error inserting table: " + error.message,
+    };
   }
 }
 

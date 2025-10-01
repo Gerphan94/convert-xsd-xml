@@ -36,14 +36,17 @@ export const writeParent = async (name, topicid) => {
 
 
 
-export async function getAllParentData() {
+export async function getParentDataByTopic(topicid) {
   const dbRef = ref(db);
   try {
     const snapshot = await get(child(dbRef, "parent"));
     if (snapshot.exists()) {
-      return snapshot.val(); // 👈 return actual data
+      // retrurn parent have topicid
+      const parentArray = snapshot.val();
+      return parentArray.filter((parent) => parent.topicid === topicid);
+      
     } else {
-      return {};
+      return [];
     }
   } catch (error) {
     console.error("Error fetching parent data:", error);
@@ -54,7 +57,7 @@ export async function getAllParentData() {
 
 /**
  * Insert new item into "parent" array
- * @param {Object} newItem - object to insert (must include id, name, topicid, etc.)
+ * @param {Object} newItem
  */
 export async function insertParent(name, topicid) {
   try {
@@ -65,7 +68,6 @@ export async function insertParent(name, topicid) {
     if (snapshot.exists()) {
       parentArray = snapshot.val(); // current array
     }
-
     // Push new item
     parentArray.push({
       id: toSnakeCase(name),
@@ -75,7 +77,6 @@ export async function insertParent(name, topicid) {
 
     // Write back to DB
     await set(ref(db, "parent"), parentArray);
-
     console.log("✅ Inserted new parent item:");
   } catch (error) {
     console.error("❌ Error inserting parent item:", error);
