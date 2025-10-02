@@ -122,7 +122,7 @@ function ConvertConfirmModal({ tablename = '', input, setOutputData, setShow }) 
 
                             {/* BODY */}
                             <div className="flex gap-4 h-full p-4 overflow-hidden">
-                                <div className="text-left mt-2 p-6 border rounded-lg shadow-md min-w-[200px] overflow-y-auto max-h-[500px]">
+                                <div className="text-left mt-2 p-6 border rounded-lg shadow-md min-w-[300px] overflow-y-auto max-h-[500px]">
                                     {structs.map((struct, index) => (
                                         <div key={index} className="flex gap-4 items-center">
                                             <div className="font-medium">{struct.table}</div>
