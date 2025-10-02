@@ -109,7 +109,7 @@ export async function saveTableDataByTableId(tableName, inputData, outputData) {
       const tableArray = snapshot.val();
 
       // find index where item.id === tableId
-      const index = tableArray.findIndex((item) => item.name === tableName);
+      const index = tableArray.findIndex((item) => item && item.name === tableName);
 
       if (index === -1) {
         console.error("❌ Table with id not found:", tableName);
@@ -142,7 +142,7 @@ export async function getOutputTable(tbname) {
     if (snapshot.exists()) {
       const tableArray = snapshot.val();
       // find index where item.id === tableId
-      const index = tableArray.findIndex((item) => item.name === tbname && item.outputData !== "");
+      const index = tableArray.findIndex((item) => item && item.name === tbname && item.outputData !== "");
 
       if (index === -1) {
 

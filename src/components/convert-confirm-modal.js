@@ -36,6 +36,7 @@ function ConvertConfirmModal({ tablename = '', input, setOutputData, setShow }) 
             const [fieldName, fieldNumber, fieldTypeRaw] = line
                 .trim()
                 .split(/\s{3,}|\t/);
+                console.log(fieldName, fieldNumber, fieldTypeRaw)
             if (!fieldName || !fieldTypeRaw) continue;
 
             if (fieldTypeRaw.includes("(T)")) {
