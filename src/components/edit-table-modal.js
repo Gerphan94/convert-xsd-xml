@@ -2,21 +2,40 @@ import { useEffect, useState } from "react";
 import { toSnakeCase } from "./func";
 
 import { updateTableName } from "./firebase/fb-table";
-function EditTableModal({ tbname, tbdes,  setShow,  handleGetTable
- }) {
 
+import Toast from "./toast";
+function EditTableModal({
+    tbname,
+    tbdes,
+    setShow,
+    handleGetTable,
+    setShowToast,
+    setMessage
+}) {
     const [input, setInput] = useState(tbdes);
     const [clearinput, setClearInput] = useState(tbname);
+   
 
     useEffect(() => {
         setClearInput(toSnakeCase(input));
     }, [input]);
 
-    const onUpdate = () => {
+    const onUpdate = async () => {
+
+        const res = await updateTableName(tbname, clearinput, input);
+        console.log(res);
+        if (res.success) {
+
+
+            setMessage({ success: true, message: res.message });
+        } else {
+
+            setMessage({ success: false, message: res.message });
+        }
+        setShowToast(true);
         setShow(false);
         handleGetTable();
-        updateTableName(tbname,clearinput, input);
-        
+
     }
     return (
         <>
@@ -36,7 +55,7 @@ function EditTableModal({ tbname, tbdes,  setShow,  handleGetTable
                                     autoComplete="off"
                                     className="border px-2 py-1 outline-none rounded-md w-full"
                                     type="text"
-                                    
+
                                     value={input}
                                     onChange={(e) => setInput(e.target.value)}
                                 />
@@ -47,7 +66,7 @@ function EditTableModal({ tbname, tbdes,  setShow,  handleGetTable
                                     type="text"
                                     disabled={true}
                                     value={clearinput}
-                                   
+
                                 />
 
                             </div>
@@ -73,6 +92,8 @@ function EditTableModal({ tbname, tbdes,  setShow,  handleGetTable
                 </div>
                 <div className="opacity-75 fixed inset-0 z-40 bg-black"></div>
             </div>
+
+            
         </>
     );
 

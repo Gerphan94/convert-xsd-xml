@@ -67,37 +67,33 @@ export async function insertTable(name, parentid) {
   }
 }
 
-export async function updateTableName(tableName, newTableName , newTableDes) {
-  console.log(tableName, newTableName , newTableDes)
+export async function updateTableName(tableName, newTableName, newTableDes) {
   try {
     const dbRef = ref(db);
     const snapshot = await get(child(dbRef, "table"));
 
     if (snapshot.exists()) {
+      console.log("✅ Table data found in DB");
       const tableArray = snapshot.val();
 
       // find index where item.id === tableId
-      const index = tableArray.findIndex((item) => item.name === tableName);
-
+      const index = tableArray.findIndex((item) => item && item.name === tableName.trim());
       if (index === -1) {
-        console.error("❌ Table with id not found:", tableName);
-        return;
+        return { success: false, message: "❌ Table with id not found: " + tableName };
       }
-
       const itemRef = ref(db, `table/${index}`);
       await update(itemRef, {
         name: newTableName,
         des: newTableDes,
       });
-
-      console.log("✅ Saved to table/" + index);
+      return { success: true, message: "✅ Cập nhật thành công" };
     } else {
-      console.error("❌ No table data found in DB");
+      return { success: false, message: "❌ No table data found in DB" };
     }
   } catch (error) {
     console.error("❌ Error saving table data:", error);
+    return { success: false, message: "❌ Error saving table data:", error };
   }
-
 }
 
 

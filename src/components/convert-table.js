@@ -9,12 +9,15 @@ import { FaSave, FaRegCopy } from "react-icons/fa";
 import ConvertConfirmModal from "./convert-confirm-modal";
 import EditTableModal from "./edit-table-modal";
 import { RiEdit2Fill } from "react-icons/ri";
-
+import Toast from "./toast";
 function Table({ data, handleGetTable }) {
 
 
     const [showConfirm, setShowConfirm] = useState(false);
     const [showEditTableModal, setShowEditTableModal] = useState(false);
+     const [showToast, setShowToast] = useState(false);
+        const [message, setMessage] = useState({ success: false, message: '' });
+    
 
     const [show, setShow] = useState(false);
     const [inputData, setInputData] = useState('');
@@ -149,12 +152,14 @@ function Table({ data, handleGetTable }) {
                     tbdes={data.des}
                     handleGetTable={handleGetTable}
                     setShow={setShowEditTableModal}
+                    setShowToast={setShowToast}
+                    setMessage={setMessage}
                 />
             }
 
-
-
-
+            {showToast &&
+                <Toast message={message} onClose={setShowToast} />
+            }
         </>
     )
 }
