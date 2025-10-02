@@ -48,6 +48,12 @@ function Table({ data, handleGetTable }) {
         navigator.clipboard.writeText(outputData);
     }
 
+    const onPasteFromClipboard = () => {
+        navigator.clipboard.readText().then((text) => {
+            setInputData(text);
+        });
+    }
+
     return (
         <>
             <div className="w-full h-full">
@@ -79,8 +85,8 @@ function Table({ data, handleGetTable }) {
                                     COLUMN
                                 </div>
                                 <div className="flex gap-2 items-center">
-                                    <button className="text-[#50589C] px-3 py-1 rounded-lg flex gap-2 items-center border rounded"
-                                        onClick={() => onConvert(inputData, data.name)}
+                                    <button className="text-[#50589C] px-3 py-1  flex gap-2 items-center border rounded"
+                                        onClick={() => onPasteFromClipboard()}
                                     >
                                         <FaRegPaste />
                                         <div>Paste from clipboard</div>
