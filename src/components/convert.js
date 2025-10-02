@@ -204,7 +204,11 @@ function Convert() {
                             <Table data={item} key={index} handleGetTable={handleGetTable} />
                         ))}
                         <div className="text-left flex gap-2 items-center pb-20">
-                            <button className="underline text-blue-300 hover:text-blue-500" onClick={() => setAddTable(true)}>Thêm table</button>
+                            <button 
+                            className="underline text-blue-300 hover:text-blue-500 disabled:text-gray-400 disabled:cursor-not-allowed"
+                            disabled={!sltParentId}
+                             onClick={() => setAddTable(true)}>
+                                Thêm table</button>
 
                             {addTable &&
                                 <>
