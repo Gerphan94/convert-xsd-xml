@@ -10,14 +10,18 @@ import ConvertConfirmModal from "./convert-confirm-modal";
 import EditTableModal from "./edit-table-modal";
 import { RiEdit2Fill } from "react-icons/ri";
 import Toast from "./toast";
+import XsdModal from "./xsd-modal";
+import { LuCodeXml } from "react-icons/lu";
+import { IoMdCode } from "react-icons/io";
+
 function Table({ data, handleGetTable }) {
 
 
     const [showConfirm, setShowConfirm] = useState(false);
     const [showEditTableModal, setShowEditTableModal] = useState(false);
-     const [showToast, setShowToast] = useState(false);
-        const [message, setMessage] = useState({ success: false, message: '' });
-    
+    const [showToast, setShowToast] = useState(false);
+    const [message, setMessage] = useState({ success: false, message: '' });
+    const [showXsdModal, setShowXsdModal] = useState(false);
 
     const [show, setShow] = useState(false);
     const [inputData, setInputData] = useState('');
@@ -66,9 +70,15 @@ function Table({ data, handleGetTable }) {
                         <div>{data.name}</div>
                         <div className="italic"> {data.des}</div>
                     </div>
-                    <div>
+                    <div className="flex gap-1 items-center">
                         <button
-                            className="text-xl"
+                            className="text-xl border rounded p-0.5"
+                            onClick={() => setShowXsdModal(true)}
+                        >
+                            <IoMdCode />
+                        </button>
+                        <button
+                            className="text-xl border rounded p-0.5"
                             onClick={() => setShowEditTableModal(true)}
                         >
                             <RiEdit2Fill />
@@ -122,6 +132,7 @@ function Table({ data, handleGetTable }) {
                                 </div>
                                 <div className="flex gap-2 items-center">
 
+
                                     <button className="text-[#50589C] px-3 py-1  flex gap-2 items-center border rounded"
                                         onClick={() => onCopy()}
                                     >
@@ -165,6 +176,13 @@ function Table({ data, handleGetTable }) {
 
             {showToast &&
                 <Toast message={message} onClose={setShowToast} />
+            }
+            {showXsdModal &&
+                <XsdModal
+                    tablename={data.name}
+                    setShow={setShowXsdModal}
+                  
+                />
             }
         </>
     )

@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import {  FaCheck, FaXmark } from "react-icons/fa6";
+import { FaCheck, FaXmark } from "react-icons/fa6";
 import Prism from "prismjs";
 import { saveTableDataByTableId, getOutputTable } from "./firebase/fb-table";
 
@@ -36,7 +36,7 @@ function ConvertConfirmModal({ tablename = '', input, setOutputData, setShow }) 
             const [fieldName, fieldNumber, fieldTypeRaw] = line
                 .trim()
                 .split(/\s{3,}|\t/);
-                console.log(fieldName, fieldNumber, fieldTypeRaw)
+            console.log(fieldName, fieldNumber, fieldTypeRaw)
             if (!fieldName || !fieldTypeRaw) continue;
 
             if (fieldTypeRaw.includes("(T)")) {
@@ -61,22 +61,24 @@ function ConvertConfirmModal({ tablename = '', input, setOutputData, setShow }) 
                 }
                 else {
                     const outData = await getOutputTable(fieldType);
+
                     tableStructures.push({ table: fieldType, outData: outData });
                     if (fieldNumber.trim().toLowerCase() === "1..n") {
-                        xmlElements.push(`<${fieldName}>`);
+                        xmlElements.push(`<${fieldType}>`);
                         for (let i = 1; i <= 3; i++) {
-                            if (outData !== null) {
-                                xmlElements.push(`  <${outData}`);
+                            if (outData === null || outData.trim() === "") {
+                                xmlElements.push(`  <${fieldType}></${fieldType}>`);
+
                             } else {
-                                xmlElements.push(`  <${fieldName}></${fieldName}>`);
+                                xmlElements.push(`  <${outData}`);
                             }
                         }
                         xmlElements.push(`</${fieldName}>`);
                     } else {
-                        if (outData !== null) {
-                            xmlElements.push(`${outData}`);
+                        if (outData === null || outData.trim() === "") {
+                            xmlElements.push(`<${fieldType}></${fieldType}>`);
                         } else {
-                            xmlElements.push(`<${fieldName}></${fieldName}>`);
+                            xmlElements.push(`${outData}`);
                         }
                     }
                 }
@@ -127,10 +129,11 @@ function ConvertConfirmModal({ tablename = '', input, setOutputData, setShow }) 
                                         <div key={index} className="flex gap-4 items-center">
                                             <div className="font-medium">{struct.table}</div>
                                             <div>
-                                                {struct.outData !== null ? (
-                                                    <FaCheck className="text-green-500" />
-                                                ) : (
+                                                {struct.outData === null || struct.outData.trim() === '' ? (
                                                     <FaXmark className="text-red-500" />
+
+                                                ) : (
+                                                    <FaCheck className="text-green-500" />
                                                 )}
                                             </div>
                                         </div>

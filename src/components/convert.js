@@ -38,7 +38,7 @@ function Convert() {
     const [tableList, setTableList] = useState([]);
 
 
-    const filterData = tableList.filter(item => item.parentid === sltParentId);
+    const filterData = tableList.filter(item => item.parentid && item.parentid.toUpperCase() === sltParentId.toUpperCase());
 
 
     const TOPICS = [
@@ -149,7 +149,7 @@ function Convert() {
                 <h1 className="text-3xl font-medium select-none ">{sltTopic.name}</h1>
                 <button className="text-3xl font-medium " onClick={onClickNext}><FaAngleRight /></button> */}
                 </di>
-                <div className=" space-y-4 overflow-y-auto md:px-20 py-4 ">
+                <div className=" space-y-4 overflow-y-scroll md:px-20 py-4 ">
                     <div className="flex gap-6 items-center text-sm">
                         <div className="w-1/4 flex gap-2 pr-2">
                             <select
