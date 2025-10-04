@@ -4,15 +4,15 @@ import { useState, useEffect } from "react";
 
 import Prism from "prismjs";
 
-import { FaArrowRightToBracket, FaAngleRight, FaAngleDown, FaRegPaste } from "react-icons/fa6";
-import { FaSave, FaRegCopy } from "react-icons/fa";
 import ConvertConfirmModal from "./convert-confirm-modal";
 import EditTableModal from "./edit-table-modal";
-import { RiEdit2Fill } from "react-icons/ri";
 import Toast from "./toast";
 import XsdModal from "./xsd-modal";
-import { LuCodeXml } from "react-icons/lu";
+import DiagramModal from "./modal-diagram";
+
+import { RiEdit2Fill, RiMessage3Line  } from "react-icons/ri";
 import { IoMdCode } from "react-icons/io";
+import { FaArrowRightToBracket, FaAngleRight, FaAngleDown, FaRegPaste } from "react-icons/fa6";
 
 function Table({ data, handleGetTable }) {
 
@@ -22,6 +22,7 @@ function Table({ data, handleGetTable }) {
     const [showToast, setShowToast] = useState(false);
     const [message, setMessage] = useState({ success: false, message: '' });
     const [showXsdModal, setShowXsdModal] = useState(false);
+    const [showDiagramModal, setShowDiagramModal] = useState(false);
 
     const [show, setShow] = useState(false);
     const [inputData, setInputData] = useState('');
@@ -71,6 +72,12 @@ function Table({ data, handleGetTable }) {
                         <div className="italic"> {data.des}</div>
                     </div>
                     <div className="flex gap-1 items-center">
+                        <button
+                            className="text-xl border rounded p-0.5"
+                            onClick={() => setShowDiagramModal(true)}
+                        >
+                            <RiMessage3Line  />
+                        </button>
                         <button
                             className="text-xl border rounded p-0.5"
                             onClick={() => setShowXsdModal(true)}
@@ -182,6 +189,13 @@ function Table({ data, handleGetTable }) {
                     tablename={data.name}
                     setShow={setShowXsdModal}
                   
+                />
+            }
+            {showDiagramModal &&
+                <DiagramModal
+                    tablename={data.name}
+                    tabledes={data.des}
+                    setShow={setShowDiagramModal}
                 />
             }
         </>
