@@ -16,15 +16,10 @@ export const DIA_CHI = `
     <QUOCGIA>QUOCGIA1</QUOCGIA>
 `
 
-
-
 function ConvertConfirmModal({ tablename = '', input, setOutputData, setShow }) {
     const [structs, setStructs] = React.useState([]);
     const [xml, setXml] = React.useState('');
     const [isEdit, setIsEdit] = React.useState(false);
-
-
-
     const convertXML = async () => {
         if (!input) return;
 
@@ -38,7 +33,6 @@ function ConvertConfirmModal({ tablename = '', input, setOutputData, setShow }) 
                 .split(/\s{3,}|\t/);
             console.log(fieldName, fieldNumber, fieldTypeRaw)
             if (!fieldName || !fieldTypeRaw) continue;
-
             if (fieldTypeRaw.includes("(T)")) {
                 if (fieldNumber.trim().toLowerCase() === "1..n") {
                     xmlElements.push(`<${fieldName}>`);
@@ -61,16 +55,18 @@ function ConvertConfirmModal({ tablename = '', input, setOutputData, setShow }) 
                 }
                 else {
                     const outData = await getOutputTable(fieldType);
-
+                    if (fieldName === 'TRIEN_KHAI_DANH_GIA_CHI_TIET') {
+                        console.log('outData', outData)
+                    }
+                
                     tableStructures.push({ table: fieldType, outData: outData });
                     if (fieldNumber.trim().toLowerCase() === "1..n") {
                         xmlElements.push(`<${fieldType}>`);
                         for (let i = 1; i <= 3; i++) {
                             if (outData === null || outData.trim() === "") {
                                 xmlElements.push(`  <${fieldType}></${fieldType}>`);
-
                             } else {
-                                xmlElements.push(`  <${outData}`);
+                                xmlElements.push(`  ${outData}`);
                             }
                         }
                         xmlElements.push(`</${fieldName}>`);

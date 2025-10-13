@@ -134,8 +134,6 @@ export async function saveTableDataByTableId(tableName, inputData, outputData) {
 
 
 export async function getOutputTable(tbname) {
-
-
   try {
     const dbRef = ref(db);
     const snapshot = await get(child(dbRef, "table"));
@@ -181,7 +179,7 @@ export const convertTextToXML = (input, name) => {
       if (number.trim().toLowerCase() === "1..n") {
         xmlElements.push(`<${field}>`);
         for (let i = 1; i <= 3; i++) {
-          xmlElements.push(`  <${field}>${field}${i}</${field}>`);
+          xmlElements.push(`  <${field}>${field}${i} 111</${field}>`);
         }
         xmlElements.push(`</${field}>`);
       } else {
