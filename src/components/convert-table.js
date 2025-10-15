@@ -1,5 +1,4 @@
 
-import { saveTableDataByTableId } from "./firebase/fb-table";
 import { useState, useEffect } from "react";
 
 import Prism from "prismjs";
@@ -10,10 +9,12 @@ import Toast from "./toast";
 import XsdModal from "./xsd-modal";
 import DiagramModal from "./modal-diagram";
 
-import { RiEdit2Fill, RiMessage3Line  } from "react-icons/ri";
+import { RiEdit2Fill, RiMessage3Line } from "react-icons/ri";
 import { IoMdCode } from "react-icons/io";
 import { FaArrowRightToBracket, FaAngleRight, FaAngleDown, FaRegPaste } from "react-icons/fa6";
 
+import ConverIColumn from "./convert-table-icolumn";
+import ExportXmlMessageModal from "./export-xml-message-modal";
 function Table({ data, handleGetTable }) {
 
 
@@ -23,10 +24,12 @@ function Table({ data, handleGetTable }) {
     const [message, setMessage] = useState({ success: false, message: '' });
     const [showXsdModal, setShowXsdModal] = useState(false);
     const [showDiagramModal, setShowDiagramModal] = useState(false);
+    const [showExportXmlMessageModal, setShowExportXmlMessageModal] = useState(false);
 
     const [show, setShow] = useState(false);
     const [inputData, setInputData] = useState('');
     const [outputData, setOutputData] = useState('');
+  
 
     useEffect(() => {
         setInputData(data.inputdata);
@@ -37,14 +40,12 @@ function Table({ data, handleGetTable }) {
         Prism.highlightAll();
     }, [outputData, show]);
 
-    const onSave = () => {
-        if (!inputData || !outputData) return;
-        saveTableDataByTableId(data.name, inputData, outputData);
-    }
+   
 
 
     const onConvert = (input, name) => {
-        if (input === "") return;
+        console.log('aaa')
+        // if (input === "") return;
         setShowConfirm(true);
         // setOutputData(convertTextToXML(input, name));
     }
@@ -55,6 +56,7 @@ function Table({ data, handleGetTable }) {
 
     const onPasteFromClipboard = () => {
         navigator.clipboard.readText().then((text) => {
+            if (!text) return;
             setInputData(text);
         });
     }
@@ -76,7 +78,7 @@ function Table({ data, handleGetTable }) {
                             className="text-xl border rounded p-0.5"
                             onClick={() => setShowDiagramModal(true)}
                         >
-                            <RiMessage3Line  />
+                            <RiMessage3Line />
                         </button>
                         <button
                             className="text-xl border rounded p-0.5"
@@ -115,31 +117,24 @@ function Table({ data, handleGetTable }) {
                                         <FaArrowRightToBracket />
                                         <div>Convert</div>
                                     </button>
-
                                 </div>
-
                             </div>
                             <div className="mt-2">
-                                <textarea
-                                    autoComplete="off"
-                                    spellCheck="false"
-                                    value={inputData}
-                                    onChange={(e) => setInputData(e.target.value)}
-                                    className="w-full h-[500px] border p-2 outline-none"
-                                    defaultValue={data.inputdata}
+                                <ConverIColumn data={inputData} setInputData={setInputData} />
 
-                                />
                             </div>
-
                         </div>
                         <div className="w-2/3 h-full">
                             <div className="flex justify-between px-2 py-1">
                                 <div className="text-xl text-blue-500">
                                     XML
                                 </div>
+                              
                                 <div className="flex gap-2 items-center">
-
-
+                                    <button
+                                    className="border px-2 py-1"
+                                        onClick={() => setShowExportXmlMessageModal(true)}
+                                    >XML MESS</button>
                                     <button className="text-[#50589C] px-3 py-1  flex gap-2 items-center border rounded"
                                         onClick={() => onCopy()}
                                     >
@@ -151,7 +146,7 @@ function Table({ data, handleGetTable }) {
 
                             </div>
                             <div>
-                                <pre className="overflow-auto h-[500px] overflow-y-auto">
+                                <pre className="overflow-auto max-h-[700px] overflow-y-auto text-xs">
                                     <code className="language-xml">{outputData}</code>
                                 </pre>
                             </div>
@@ -188,7 +183,7 @@ function Table({ data, handleGetTable }) {
                 <XsdModal
                     tablename={data.name}
                     setShow={setShowXsdModal}
-                  
+
                 />
             }
             {showDiagramModal &&
@@ -196,6 +191,14 @@ function Table({ data, handleGetTable }) {
                     tablename={data.name}
                     tabledes={data.des}
                     setShow={setShowDiagramModal}
+                />
+            }
+            {showExportXmlMessageModal &&
+                <ExportXmlMessageModal
+                    tablename={data.name}
+                    setShow={setShowExportXmlMessageModal}
+                    setShowToast={setShowToast}
+                    setMessage={setMessage}
                 />
             }
         </>

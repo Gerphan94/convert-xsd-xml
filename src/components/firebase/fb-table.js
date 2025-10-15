@@ -168,48 +168,48 @@ export const DIA_CHI = `
 `
 
 
-export const convertTextToXML = (input, name) => {
-  const lines = input.trim().split("\n");
+// export const convertTextToXML = (input, name) => {
+//   const lines = input.trim().split("\n");
 
-  let xmlElements = [];
-  for (let line of lines) {
-    let [field, number, typeRaw] = line.trim().split(/\s{3,}|\t/); // tách bằng tab hoặc nhiều space
-    if (!field || !typeRaw) continue;
-    if (typeRaw.includes("(T)")) {
-      if (number.trim().toLowerCase() === "1..n") {
-        xmlElements.push(`<${field}>`);
-        for (let i = 1; i <= 3; i++) {
-          xmlElements.push(`  <${field}>${field}${i} 111</${field}>`);
-        }
-        xmlElements.push(`</${field}>`);
-      } else {
-        xmlElements.push(`<${field}>${field}1</${field}>`);
-      }
+//   let xmlElements = [];
+//   for (let line of lines) {
+//     let [field, number, typeRaw] = line.trim().split(/\s{3,}|\t/); // tách bằng tab hoặc nhiều space
+//     if (!field || !typeRaw) continue;
+//     if (typeRaw.includes("(T)")) {
+//       if (number.trim().toLowerCase() === "1..n") {
+//         xmlElements.push(`<${field}>`);
+//         for (let i = 1; i <= 3; i++) {
+//           xmlElements.push(`  <${field}>${field}${i} 111</${field}>`);
+//         }
+//         xmlElements.push(`</${field}>`);
+//       } else {
+//         xmlElements.push(`<${field}>${field}1</${field}>`);
+//       }
 
-    } else if (typeRaw.includes("(S)")) {
-      if (typeRaw.includes("THOIGIAN")) {
-        xmlElements.push(`<${field}>${THOIGIAN}</${field}>`);
-      } else if (typeRaw.includes("DIA_CHI")) {
-        xmlElements.push(`<${field}>${DIA_CHI}</${field}>`);
-      } else {
-        const fieldType = typeRaw.replace("(S)", "").trim();
-        if (number.trim().toLowerCase() === "1..n") {
-          xmlElements.push(`<${field}>`);
-          for (let i = 1; i <= 3; i++) {
-            xmlElements.push(`  <${fieldType}></${fieldType}>`);
-          }
-          xmlElements.push(`</${fieldType}>`);
-        }
-        else {
-          xmlElements.push(`<${fieldType}></${fieldType}>`);
-        }
-      }
-    }
-  }
+//     } else if (typeRaw.includes("(S)")) {
+//       if (typeRaw.includes("THOIGIAN")) {
+//         xmlElements.push(`<${field}>${THOIGIAN}</${field}>`);
+//       } else if (typeRaw.includes("DIA_CHI")) {
+//         xmlElements.push(`<${field}>${DIA_CHI}</${field}>`);
+//       } else {
+//         const fieldType = typeRaw.replace("(S)", "").trim();
+//         if (number.trim().toLowerCase() === "1..n") {
+//           xmlElements.push(`<${field}>`);
+//           for (let i = 1; i <= 3; i++) {
+//             xmlElements.push(`  <${fieldType}></${fieldType}>`);
+//           }
+//           xmlElements.push(`</${fieldType}>`);
+//         }
+//         else {
+//           xmlElements.push(`<${fieldType}></${fieldType}>`);
+//         }
+//       }
+//     }
+//   }
 
-  // Gói thành schema
-  const schema = `<${name.toUpperCase()}>
-    ${xmlElements.join("\n")}
-</${name.toUpperCase()}>`;
-  return schema;
-}
+//   // Gói thành schema
+//   const schema = `<${name.toUpperCase()}>
+//     ${xmlElements.join("\n")}
+// </${name.toUpperCase()}>`;
+//   return schema;
+// }
