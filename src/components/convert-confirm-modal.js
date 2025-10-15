@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { FaCheck, FaXmark } from "react-icons/fa6";
 import Prism from "prismjs";
 import { saveTableDataByTableId, getOutputTable } from "./firebase/fb-table";
@@ -22,7 +22,9 @@ function ConvertConfirmModal({ tablename = "", input, setOutputData, setShow }) 
     const [isEdit, setIsEdit] = useState(false);
     const [numOfXml, setNumOfXml] = useState(1);
     const [loading, setLoading] = useState(false);
-    const [thoiGianCount, setThoiGianCount] = useState(0);
+
+    // 🧩 useRef allows global counter that survives re-renders and updates synchronously
+    const thoiGianCountRef = useRef(0);
 
     // ✅ Convert XML logic
     const convertXML = async (n) => {
@@ -38,7 +40,6 @@ function ConvertConfirmModal({ tablename = "", input, setOutputData, setShow }) 
                 .split(/\s{3,}|\t/);
 
             if (!fieldName || !fieldTypeRaw) continue;
-
             const cleanFieldNumber = fieldNumber.replace(/\s+/g, "").toLowerCase();
 
             // (T) Type
@@ -61,10 +62,13 @@ function ConvertConfirmModal({ tablename = "", input, setOutputData, setShow }) 
                 const fieldType = fieldTypeRaw.replace("(S)", "").trim();
 
                 if (fieldType === "THOIGIAN") {
-                    const newCount = thoiGianCount + 1;
-                    xmlElements.push(`<${fieldName}>${THOIGIAN(newCount)}</${fieldName}>`);
-                    tableStructures.push({ table: fieldType, outData: THOIGIAN(newCount) });
-                    setThoiGianCount(newCount);
+                    // ✅ use global mutable counter
+                    thoiGianCountRef.current++;
+                    const count = thoiGianCountRef.current;
+
+                    const outData = THOIGIAN(count);
+                    xmlElements.push(`<${fieldName}>${outData}</${fieldName}>`);
+                    tableStructures.push({ table: fieldType, outData });
                 } else if (fieldType === "DIA_CHI") {
                     xmlElements.push(`<${fieldName}>${DIA_CHI}</${fieldName}>`);
                     tableStructures.push({ table: fieldType, outData: DIA_CHI });
@@ -104,6 +108,9 @@ function ConvertConfirmModal({ tablename = "", input, setOutputData, setShow }) 
             if (!input) return;
             setLoading(true);
 
+            // reset counter for first run only
+            thoiGianCountRef.current = 0;
+
             const { schema, tableStructures } = await convertXML(1);
             setXml(schema || "");
             setStructs(tableStructures || []);
@@ -121,6 +128,7 @@ function ConvertConfirmModal({ tablename = "", input, setOutputData, setShow }) 
 
     // ⚡ Convert multiple XMLs
     const onConvert = async () => {
+        thoiGianCountRef.current = 0;
         setLoading(true);
         let combinedXML = "";
         let combinedStructs = [];
@@ -128,7 +136,6 @@ function ConvertConfirmModal({ tablename = "", input, setOutputData, setShow }) 
         for (let i = 0; i < numOfXml; i++) {
             const result = await convertXML(i + 1);
             if (!result) continue;
-
             combinedXML += result.schema + "\n";
             combinedStructs = [...combinedStructs, ...(result.tableStructures || [])];
         }
@@ -169,7 +176,9 @@ function ConvertConfirmModal({ tablename = "", input, setOutputData, setShow }) 
                                             onChange={(e) => setNumOfXml(Number(e.target.value))}
                                         >
                                             {[1, 2, 3].map((n) => (
-                                                <option key={n} value={n}>{n}</option>
+                                                <option key={n} value={n}>
+                                                    {n}
+                                                </option>
                                             ))}
                                         </select>
 
