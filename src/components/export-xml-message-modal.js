@@ -7,7 +7,7 @@ function ExportXmlMessageModal({ tablename, setShow, setShowToast, setMessage })
 
     const ThongDiepOriginal = `
 <?xml version="1.0" encoding="utf-8"?>
-<${tablename}_THONGDIEP}>
+<${tablename}_THONGDIEP>
   <THONGTINDONVI>
     <DINH_DANH_TO_CHUC>
       <DINH_DANH_TO_CHUC>DINH_DANH_TO_CHUC1</DINH_DANH_TO_CHUC>

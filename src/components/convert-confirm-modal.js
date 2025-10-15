@@ -161,8 +161,10 @@ function ConvertConfirmModal({ tablename = "", input, setOutputData, setShow }) 
                     <div className="w-screen py-10">
                         <div className="relative mx-auto md:w-2/3 bg-white rounded-xl shadow-lg flex flex-col">
                             {/* HEADER */}
-                            <div className="text-lg font-bold px-4 py-3 bg-[#50589C] text-white rounded-t-lg">
-                                {tablename}
+                            <div className="flex justify-between text-lg font-bold px-4 py-3 bg-[#50589C] text-white rounded-t-lg">
+                                <div>{tablename}</div>
+                                <button onClick={() => setShow(false)}><FaXmark /></button>
+                                
                             </div>
 
                             {/* CONTROLS */}

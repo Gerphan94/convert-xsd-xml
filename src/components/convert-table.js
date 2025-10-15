@@ -11,7 +11,7 @@ import DiagramModal from "./modal-diagram";
 
 import { RiEdit2Fill, RiMessage3Line } from "react-icons/ri";
 import { IoMdCode } from "react-icons/io";
-import { FaArrowRightToBracket, FaAngleRight, FaAngleDown, FaRegPaste } from "react-icons/fa6";
+import { FaArrowRightToBracket, FaAngleRight, FaAngleDown, FaRegPaste, FaMessage } from "react-icons/fa6";
 
 import ConverIColumn from "./convert-table-icolumn";
 import ExportXmlMessageModal from "./export-xml-message-modal";
@@ -29,7 +29,7 @@ function Table({ data, handleGetTable }) {
     const [show, setShow] = useState(false);
     const [inputData, setInputData] = useState('');
     const [outputData, setOutputData] = useState('');
-  
+
 
     useEffect(() => {
         setInputData(data.inputdata);
@@ -40,7 +40,7 @@ function Table({ data, handleGetTable }) {
         Prism.highlightAll();
     }, [outputData, show]);
 
-   
+
 
 
     const onConvert = (input, name) => {
@@ -129,12 +129,15 @@ function Table({ data, handleGetTable }) {
                                 <div className="text-xl text-blue-500">
                                     XML
                                 </div>
-                              
+
                                 <div className="flex gap-2 items-center">
                                     <button
-                                    className="border px-2 py-1"
+                                        className="text-[#50589C] px-3 py-1  flex gap-2 items-center border rounded"
                                         onClick={() => setShowExportXmlMessageModal(true)}
-                                    >XML MESS</button>
+                                    >
+                                        <FaMessage />
+                                        <div>XML MESS</div>
+                                    </button>
                                     <button className="text-[#50589C] px-3 py-1  flex gap-2 items-center border rounded"
                                         onClick={() => onCopy()}
                                     >
